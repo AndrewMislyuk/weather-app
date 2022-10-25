@@ -1,0 +1,29 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+  &::before,
+  &::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+}
+
+html,
+body,
+#__nuxt,
+.main-layout {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+}
+
+.container {
+  width: 100%;
+  max-width: rem(1200px);
+  margin: 0 auto;
+}
