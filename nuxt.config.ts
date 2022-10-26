@@ -13,6 +13,11 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
   },
+
+  publicRuntimeConfig: {
+    apiKey: process.env.WEATHER_API_KEY,
+  },
+
   css: ["@/assets/styles/main.scss", "v-calendar/dist/style.css"],
   build: {
     loaders: {

@@ -3,7 +3,12 @@
     <div class="index">
       <TheHeader :menu="menu" @toggle-menu="toggleMenu" />
 
-      <Weather :weatherData="weatherData" :date="date" @get-date="setDate" />
+      <Weather
+        :weatherError="weatherError"
+        :weatherData="weatherData"
+        :date="date"
+        @get-date="setDate"
+      />
     </div>
   </NuxtLayout>
 </template>
@@ -13,6 +18,8 @@ definePageMeta({
   layout: false,
 });
 
+const config = useRuntimeConfig();
+const weatherError = ref<string>("");
 const weatherData = ref<WeatherType>(undefined);
 const date = ref(new Date());
 const menu = ref<Array<Menu>>([
@@ -74,24 +81,35 @@ const toggleMenu = (id: number) => {
     return m;
   });
 
-  callApi();
+  callCurrentApi();
 };
 
 onBeforeMount(() => {
-  callApi();
+  callCurrentApi();
 });
 
-const callApi = async () => {
+const callCurrentApi = () => {
   const filteredCity: Array<Menu> | undefined = menu.value.filter(
     (f: Menu) => f.active
   );
   const currentCity = filteredCity?.length ? filteredCity[0] : undefined;
 
-  const currentWeather = await $fetch<WeatherType>(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${currentCity?.lat}&lon=${currentCity?.lon}&units=metric&appid=d24e10a982b4a7cbd32ec016bb307427`
-  );
+  fetchWeather(currentCity?.lat, currentCity?.lon);
+};
 
-  weatherData.value = currentWeather;
+const fetchWeather = async (
+  lat: string | undefined,
+  lon: string | undefined
+) => {
+  try {
+    const currentWeather = await $fetch<WeatherType>(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${config.apiKey}`
+    );
+
+    weatherData.value = currentWeather;
+  } catch (error: any) {
+    weatherError.value = error?.message;
+  }
 };
 </script>
 

@@ -33,6 +33,12 @@
             </div>
           </div>
         </div>
+        <div class="weather__results" v-if="weatherError.length">
+          <div class="weather__results-error">
+            {{ weatherError }}
+          </div>
+        </div>
+
         <div class="weather__calendar">
           <ClientOnly>
             <v-date-picker v-model="innerDate" @update:modelValue="getDate" />
@@ -54,6 +60,11 @@ const props = defineProps({
 
   weatherData: {
     type: Object as PropType<WeatherType>,
+  },
+
+  weatherError: {
+    type: String,
+    default: "",
   },
 });
 

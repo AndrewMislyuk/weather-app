@@ -1,42 +1,29 @@
-# Nuxt 3 Minimal Starter
+# Nuxt 3 Weather App
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+### install the dependencies
 
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# yarn
+```
 yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
 ```
 
-## Development Server
-
-Start the development server on http://localhost:3000
+### Setup Env Variables
 
 ```bash
-npm run dev
+Create WEATHER_API_KEY variable into .env file
 ```
 
-## Production
+### Development Server On Port 3000
 
-Build the application for production:
-
-```bash
-npm run build
+```
+yarn dev
 ```
 
-Locally preview production build:
+## Docker
 
-```bash
-npm run preview
+```
+docker build . -t weather-app
 ```
 
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
+```
+docker run -p 3000:3000 weather-app
+```
