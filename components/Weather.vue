@@ -79,7 +79,7 @@ const getDate = (date: Date) => {
 };
 
 const toDate = (value: number | undefined) => {
-  return value ? moment(value).format("dddd") : value;
+  return value ? moment.unix(value).format("dddd") : value;
 };
 </script>
 
