@@ -1,6 +1,6 @@
 # Nuxt 3 Weather App
 
-### install the dependencies
+### Install The Dependencies
 
 ```
 yarn install

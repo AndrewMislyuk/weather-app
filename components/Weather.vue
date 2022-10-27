@@ -1,12 +1,12 @@
 <template>
-  <section class="weather">
-    <div class="container">
-      <div class="weather__wrapper">
-        <div class="weather__results" v-if="weatherData">
-          <div class="weather__row">
-            <div class="weather__col">
+  <section class="bg-white">
+    <div class="container mx-auto w-3/4">
+      <div class="flex justify-between">
+        <div class="py-10" v-if="weatherData && !weatherError.length">
+          <div class="flex items-center">
+            <div>
               <div
-                class="weather__results-img"
+                class="weather-image mr-5"
                 :style="{
                   'background-image':
                     'url(http://openweathermap.org/img/wn/' +
@@ -15,31 +15,39 @@
                 }"
               />
             </div>
-            <div class="weather__col">
-              <div class="weather__results-day">
+            <div>
+              <p
+                class="mb-3 text-lg font-light text-gray-800 md:text-xl dark:text-gray-500"
+              >
                 {{ toDate(weatherData?.dt) }},
                 {{ weatherData?.weather[0].main }}
-              </div>
+              </p>
 
-              <div class="weather__results-temperature">
+              <p
+                class="mb-3 text-lg font-light text-gray-800 md:text-xl dark:text-gray-500"
+              >
                 {{ weatherData?.main?.temp }} - ℃
-              </div>
-              <div class="weather__results-humidity">
+              </p>
+              <p
+                class="mb-3 text-lg font-light text-gray-800 md:text-xl dark:text-gray-500"
+              >
                 {{ weatherData?.main?.humidity }} - Humidity
-              </div>
-              <div class="weather__results-wind">
+              </p>
+              <p
+                class="mb-3 text-lg font-light text-gray-800 md:text-xl dark:text-gray-500"
+              >
                 {{ weatherData?.wind?.speed }} - Kilometers per hour
-              </div>
+              </p>
             </div>
           </div>
         </div>
-        <div class="weather__results" v-if="weatherError.length">
-          <div class="weather__results-error">
+        <div class="py-10" v-else>
+          <p class="font-bold text-red-700">
             {{ weatherError }}
-          </div>
+          </p>
         </div>
 
-        <div class="weather__calendar">
+        <div class="py-3">
           <ClientOnly>
             <v-date-picker v-model="innerDate" @update:modelValue="getDate" />
           </ClientOnly>

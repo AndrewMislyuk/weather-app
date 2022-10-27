@@ -14,13 +14,16 @@
 </template>
 
 <script setup lang="ts">
+import moment from "moment";
+
 definePageMeta({
   layout: false,
 });
 
 const config = useRuntimeConfig();
 const weatherError = ref<string>("");
-const weatherData = ref<WeatherType>(undefined);
+const weatherList = ref<Array<WeatherType>>([]);
+const weatherData = ref<WeatherType>(null);
 const date = ref(new Date());
 const menu = ref<Array<Menu>>([
   {
@@ -66,8 +69,9 @@ const menu = ref<Array<Menu>>([
 
 const setDate = (value: Date) => {
   date.value = value;
+  weatherError.value = "";
 
-  console.log("get calendar date: ", date.value);
+  currentWeatherFilter();
 };
 
 const toggleMenu = (id: number) => {
@@ -88,13 +92,15 @@ onBeforeMount(() => {
   callCurrentApi();
 });
 
-const callCurrentApi = () => {
-  const filteredCity: Array<Menu> | undefined = menu.value.filter(
-    (f: Menu) => f.active
-  );
+const callCurrentApi = async () => {
+  const filteredCity: Array<Menu> = menu.value.filter((f: Menu) => f.active);
   const currentCity = filteredCity?.length ? filteredCity[0] : undefined;
 
-  fetchWeather(currentCity?.lat, currentCity?.lon);
+  await fetchWeather(currentCity?.lat, currentCity?.lon);
+
+  if (!weatherError.value) {
+    currentWeatherFilter();
+  }
 };
 
 const fetchWeather = async (
@@ -102,14 +108,29 @@ const fetchWeather = async (
   lon: string | undefined
 ) => {
   try {
-    const currentWeather = await $fetch<WeatherType>(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${config.apiKey}`
+    const { list }: { list: Array<WeatherType> } = await $fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${config.apiKey}`
     );
 
-    weatherData.value = currentWeather;
+    weatherList.value = list;
   } catch (error: any) {
     weatherError.value = error?.message;
   }
+};
+
+const currentWeatherFilter = () => {
+  const filteredWeather: Array<WeatherType> = weatherList.value.filter(
+    (f: WeatherType) =>
+      moment.unix(Number(f?.dt)).format("YYYY-MM-DD") ===
+      moment(date.value).format("YYYY-MM-DD")
+  );
+
+  if (filteredWeather.length) {
+    weatherData.value = filteredWeather[0];
+    return;
+  }
+
+  weatherError.value = "No Data";
 };
 </script>
 

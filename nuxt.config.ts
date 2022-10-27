@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [],
+  modules: ["@nuxtjs/tailwindcss"],
   content: {},
   typescript: {
     strict: true,
